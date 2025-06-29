@@ -176,16 +176,40 @@ function App() {
           <div className="card">
             <div className="card-header">Alert Types</div>
             <div className="card-body">
-              <div className="alert alert-info">
+              <div 
+                className="alert alert-info" 
+                role="alert" 
+                aria-label="Information alert"
+                tabIndex={0}
+              >
+                <span className="sr-only">Information: </span>
                 💡 <strong>Info:</strong> This component library is absolutely amazing!
               </div>
-              <div className="alert alert-success">
+              <div 
+                className="alert alert-success" 
+                role="alert" 
+                aria-label="Success alert"
+                tabIndex={0}
+              >
+                <span className="sr-only">Success: </span>
                 ✅ <strong>Success:</strong> You've successfully loaded Liquid Excrement!
               </div>
-              <div className="alert alert-warning">
+              <div 
+                className="alert alert-warning" 
+                role="alert" 
+                aria-label="Warning alert"
+                tabIndex={0}
+              >
+                <span className="sr-only">Warning: </span>
                 ⚠️ <strong>Warning:</strong> Too much fun may cause uncontrollable laughter!
               </div>
-              <div className="alert alert-danger">
+              <div 
+                className="alert alert-danger" 
+                role="alert" 
+                aria-label="Danger alert"
+                tabIndex={0}
+              >
+                <span className="sr-only">Danger: </span>
                 🚨 <strong>Danger:</strong> This library is dangerously addictive!
               </div>
               <p className="pun-text">Alerts that actually make you want to read them! 📖</p>
@@ -198,11 +222,20 @@ function App() {
               <button 
                 className="btn btn-warning" 
                 onClick={() => setShowAlert(!showAlert)}
+                aria-expanded={showAlert}
+                aria-controls="interactive-alert"
               >
                 {showAlert ? 'Hide Alert' : 'Show Alert'}
               </button>
               {showAlert && (
-                <div className="alert alert-info mt-2">
+                <div 
+                  id="interactive-alert"
+                  className="alert alert-info mt-2" 
+                  role="alert"
+                  aria-label="Interactive information alert"
+                  tabIndex={0}
+                >
+                  <span className="sr-only">Information: </span>
                   🎉 <strong>Interactive Alert:</strong> You clicked the button! You're getting the hang of this!
                 </div>
               )}
