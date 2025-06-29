@@ -5,6 +5,85 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [showAlert, setShowAlert] = useState(false)
 
+  // Create different types of fart sounds using Web Audio API
+  const createFartSound = (type: 'wet' | 'dry' | 'squeaky' | 'bass' | 'quick') => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    
+    // Create oscillator for the main sound
+    const oscillator = audioContext.createOscillator()
+    const gainNode = audioContext.createGain()
+    
+    // Create filter for shaping the sound
+    const filter = audioContext.createBiquadFilter()
+    filter.type = 'lowpass'
+    
+    // Connect the audio nodes
+    oscillator.connect(filter)
+    filter.connect(gainNode)
+    gainNode.connect(audioContext.destination)
+    
+    // Set initial volume
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
+    
+    switch (type) {
+      case 'wet':
+        // Wet fart - lower frequency with noise
+        oscillator.frequency.setValueAtTime(80, audioContext.currentTime)
+        oscillator.frequency.exponentialRampToValueAtTime(40, audioContext.currentTime + 0.3)
+        filter.frequency.setValueAtTime(200, audioContext.currentTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4)
+        oscillator.start(audioContext.currentTime)
+        oscillator.stop(audioContext.currentTime + 0.4)
+        break
+        
+      case 'dry':
+        // Dry fart - higher frequency, shorter
+        oscillator.frequency.setValueAtTime(120, audioContext.currentTime)
+        oscillator.frequency.exponentialRampToValueAtTime(60, audioContext.currentTime + 0.2)
+        filter.frequency.setValueAtTime(300, audioContext.currentTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25)
+        oscillator.start(audioContext.currentTime)
+        oscillator.stop(audioContext.currentTime + 0.25)
+        break
+        
+      case 'squeaky':
+        // Squeaky fart - high frequency with modulation
+        oscillator.frequency.setValueAtTime(200, audioContext.currentTime)
+        oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.15)
+        filter.frequency.setValueAtTime(500, audioContext.currentTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2)
+        oscillator.start(audioContext.currentTime)
+        oscillator.stop(audioContext.currentTime + 0.2)
+        break
+        
+      case 'bass':
+        // Bass fart - very low frequency, longer
+        oscillator.frequency.setValueAtTime(50, audioContext.currentTime)
+        oscillator.frequency.exponentialRampToValueAtTime(30, audioContext.currentTime + 0.5)
+        filter.frequency.setValueAtTime(150, audioContext.currentTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6)
+        oscillator.start(audioContext.currentTime)
+        oscillator.stop(audioContext.currentTime + 0.6)
+        break
+        
+      case 'quick':
+        // Quick fart - very short burst
+        oscillator.frequency.setValueAtTime(100, audioContext.currentTime)
+        oscillator.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.1)
+        filter.frequency.setValueAtTime(250, audioContext.currentTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15)
+        oscillator.start(audioContext.currentTime)
+        oscillator.stop(audioContext.currentTime + 0.15)
+        break
+    }
+  }
+
+  const playRandomFartSound = () => {
+    const fartTypes: Array<'wet' | 'dry' | 'squeaky' | 'bass' | 'quick'> = ['wet', 'dry', 'squeaky', 'bass', 'quick']
+    const randomType = fartTypes[Math.floor(Math.random() * fartTypes.length)]
+    createFartSound(randomType)
+  }
+
   const handleSquish = (element: HTMLElement) => {
     element.classList.add('squish')
     setTimeout(() => element.classList.remove('squish'), 600)
@@ -12,6 +91,7 @@ function App() {
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     handleSquish(e.currentTarget)
+    playRandomFartSound()
   }
 
   return (
@@ -131,7 +211,10 @@ function App() {
               <p>Current input value: <strong>{inputValue || 'Nothing yet...'}</strong></p>
               <button 
                 className="btn btn-primary" 
-                onClick={() => setInputValue('💩 Liquid Excrement is the best! 💩')}
+                onClick={(e) => {
+                  setInputValue('💩 Liquid Excrement is the best! 💩')
+                  handleButtonClick(e)
+                }}
               >
                 Fill with Poo Love
               </button>
@@ -221,7 +304,10 @@ function App() {
             <div className="card-body">
               <button 
                 className="btn btn-warning" 
-                onClick={() => setShowAlert(!showAlert)}
+                onClick={(e) => {
+                  setShowAlert(!showAlert)
+                  handleButtonClick(e)
+                }}
                 aria-expanded={showAlert}
                 aria-controls="interactive-alert"
               >
